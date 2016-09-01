@@ -1,0 +1,146 @@
+#include<stdio.h>
+#include<malloc.h>
+struct node
+{int data;
+struct node *next;
+};
+
+void create(struct node *head,int num)
+{
+	struct node *p,*q;
+	int i=1;
+	q=head;
+	while(i<=num)
+	{
+		p=(struct node *)malloc(sizeof(struct node));
+		printf("请输入第%d个节点数据：",i);
+		scanf("%d",&p->data);
+		printf("\n");
+		q->next=p;
+		q=p;
+		i++;
+	}
+	q->next=NULL;
+}
+
+void print(struct node *head)
+{
+	struct node *p;
+	p=head->next;
+	while(p!=NULL)
+	{
+		printf("%d  ",p->data);
+		p=p->next;
+	}
+	printf("\n");
+}
+
+
+int del(struct node *head,int i)
+{
+	struct node *p,*q;
+	int num=0;
+	p=head;
+	if(p->next==NULL)
+		return 0;
+	while(num<i-1&&p->next!=NULL)
+	{
+		p=p->next;
+		num++;
+	}
+	if(p->next==NULL)
+		return 0;
+	q=p->next;
+	p->next=q->next;
+	return 1;
+}
+
+int insert(struct node *head,int i,int data)
+{
+	int j=1;
+	struct node *node,*temp;
+	node=(struct node*)malloc(sizeof(struct node));
+	if(node==NULL)
+		return 0;
+	node->data=data;
+	temp=head->next;
+	if(temp==NULL)
+		if(i==0)
+		{
+			head->next=node;
+			node->next=NULL;
+			return 1;
+		}
+	else  return 0;
+	while(j<i && temp!=NULL) 
+	{
+		temp=temp->next;
+		j++;
+	}
+	if(temp==NULL)
+		return 0;
+	else
+	{
+		node->next=temp->next;
+		temp->next=node;
+		return 1; 
+	}
+}
+
+
+main()
+{
+	struct node *L;
+	char cmd;
+	int number,i,j,data;
+	L=(struct node *)malloc(sizeof(struct node));
+	printf("请输入节点个数：\n");
+	scanf("%d",&number);
+	create(L,number);
+	print(L);
+	do 
+	{
+		printf("i,I。。。插入\n");
+		printf("d,D。。。删除\n");
+		printf("q,Q。。。退出\n");
+		do
+		{
+			fflush(stdin);
+			scanf("%c",&cmd);
+		}while((cmd!='d')&&(cmd!='D')&&(cmd!='i')&&(cmd!='I')&&(cmd!='q')&&(cmd!='Q'));
+		switch(cmd)
+		{
+			case 'i':
+			case 'I':
+				printf("请输入要插入的数据：");
+				scanf("%d",&data);
+				printf("请输入要插入的位置：");
+				scanf("%d",&i);
+				j=insert(L,i,data);
+				if(j==0)printf("插入不成功！");
+				else
+				{
+					print(L);
+					printf("插入成功！");
+				}
+				break;
+			case 'd':
+			case 'D':
+				printf("请输入要删除的位置：");
+				scanf("%d",&i);
+				if(i<1)
+					printf("位置不正确！");
+				else
+				{
+					j=del(L,i);
+					if(j==0)printf("删除不成功！");
+					else
+					{
+						print(L);
+						printf("删除成功！");
+					}
+				}
+		}
+			
+	}while((cmd!='q')&&(cmd!='Q'));
+}
